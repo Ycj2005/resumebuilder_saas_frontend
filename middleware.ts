@@ -1,7 +1,11 @@
 import { jwtVerify } from "jose";
 import { NextRequest, NextResponse } from "next/server";
 export async function middleware(req: NextRequest) {
-  const authRoutes = ["/login", "/register", "/"];
+  const authRoutes = [
+    `${process.env.NEXT_PUBLIC_BASE_URL}/login`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/register`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/`,
+  ];
   const protectedRoute = [
     `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`,
     `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/templates`,
@@ -14,7 +18,9 @@ export async function middleware(req: NextRequest) {
   const tokencookievalue = req?.cookies?.get("tokenCookie")?.value;
   console.log("**** req middleware ****", tokencookievalue);
   if (!tokencookievalue && protectedRoute.includes(pathname)) {
-    return NextResponse.redirect(new URL(`${process.env.NEXT_PUBLIC_BASE_URL}/login`, req.url));
+    return NextResponse.redirect(
+      new URL(`${process.env.NEXT_PUBLIC_BASE_URL}/login`, req.url),
+    );
   }
   try {
     const secret = new TextEncoder().encode(process.env.JWTSECRET);
@@ -24,7 +30,9 @@ export async function middleware(req: NextRequest) {
     console.log("payload : ", payload);
 
     if (payload?.userId && authRoutes.includes(pathname)) {
-      return NextResponse.redirect(new URL(`${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`, req.url));
+      return NextResponse.redirect(
+        new URL(`${process.env.NEXT_PUBLIC_BASE_URL}/dashboard`, req.url),
+      );
     }
     return NextResponse.next();
   } catch (error) {
@@ -35,5 +43,9 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   //   matcher: ["/dashboard/:path*", "/"],
-  matcher: [`${process.env.NEXT_PUBLIC_BASE_URL}/login`, `${process.env.NEXT_PUBLIC_BASE_URL}/`, `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/:path*`], //runevery where just testin purpose
+  matcher: [
+    `${process.env.NEXT_PUBLIC_BASE_URL}/login`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/`,
+    `${process.env.NEXT_PUBLIC_BASE_URL}/dashboard/:path*`,
+  ], //runevery where just testin purpose
 };
