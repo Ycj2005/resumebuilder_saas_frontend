@@ -38,7 +38,7 @@ export default function ProfilePage() {
   const cookiename = "tokenCookie";
   const { data } = useContext(userContext);
   console.log("data context :", data);
-  
+
   const [updateddata, setUpdatedData] = useState<InputData>({
     email: data?.email,
     name: data?.name,
@@ -62,7 +62,7 @@ export default function ProfilePage() {
     }
   }
   async function deleteCookies() {
-    await fetch("http://localhost:5500/api/v1/users/logout", {
+    await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/users/logout`, {
       method: "POST",
       credentials: "include",
     });
@@ -75,14 +75,17 @@ export default function ProfilePage() {
 
   const handleSave = async () => {
     try {
-      let res = await fetch("http://localhost:5500/api/v1/users/updateuser", {
-        method: "post",
-        credentials: "include",
-        headers: {
-          "Content-type": "application/json",
+      let res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/users/updateuser`,
+        {
+          method: "post",
+          credentials: "include",
+          headers: {
+            "Content-type": "application/json",
+          },
+          body: JSON.stringify({ ...updateddata }),
         },
-        body: JSON.stringify({ ...updateddata }),
-      });
+      );
 
       let data = await res.json();
       console.log("updated response  : ", data);

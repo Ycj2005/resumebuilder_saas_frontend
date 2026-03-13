@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, Transition, Variants } from "framer-motion";
 import {
   ArrowRight,
   MoveRight,
@@ -18,10 +18,22 @@ import TestimonialGrid from "./testimonialGrids";
 import ExpansionGrid from "./testimonialGrids";
 
 export default function MainDashboard() {
-  const fadeInUp = {
+  const fadeInUp: Variants = {
     initial: { opacity: 0, y: 15 },
-    animate: { opacity: 1, y: 0 },
-    transition: { duration: 0.7, ease: [0.19, 1, 0.22, 1] },
+    animate: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.7,
+        ease: "easeInOut",
+      },
+    },
+  };
+
+  const floatingTransition: Transition = {
+    duration: 4,
+    repeat: Infinity,
+    ease: "easeInOut",
   };
 
   return (
@@ -33,7 +45,9 @@ export default function MainDashboard() {
         <div className="grid lg:grid-cols-2 gap-20 items-center">
           <div className="space-y-10">
             <motion.div
-              {...fadeInUp}
+              variants={fadeInUp}
+              initial="initial"
+              animate="animate"
               className="inline-flex items-center gap-2 bg-slate-50 border border-slate-100 px-4 py-2 rounded-full"
             >
               <span className="relative flex h-2 w-2">
@@ -55,7 +69,12 @@ export default function MainDashboard() {
               of Career.
             </motion.h1>
 
-            <motion.div {...fadeInUp} className="space-y-6">
+            <motion.div
+              variants={fadeInUp}
+              initial="initial"
+              animate="animate"
+              className="space-y-6"
+            >
               <p className="max-w-md text-lg text-slate-500 font-light leading-relaxed">
                 Build a job-winning resume for free. [cite: 7] Our ATS-optimized
                 system ensures your narrative survives automated filters and
@@ -82,7 +101,12 @@ export default function MainDashboard() {
               </ul>
             </motion.div>
 
-            <motion.div {...fadeInUp} className="pt-6">
+            <motion.div
+              variants={fadeInUp}
+              initial="initial"
+              animate="animate"
+              className="pt-6"
+            >
               <Link href="/login">
                 <button className="group bg-black text-white px-12 py-6 flex items-center gap-6 hover:bg-zinc-800 transition-all">
                   <span className="font-bold uppercase tracking-widest text-xs">
@@ -232,8 +256,10 @@ export default function MainDashboard() {
 
             {/* Floating Export Indicator */}
             <motion.div
+              // animate={{ y: [0, -10, 0] }}
+              // transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
               animate={{ y: [0, -10, 0] }}
-              transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+              transition={floatingTransition}
               className="absolute -bottom-6 -right-6 bg-black text-white p-6 shadow-2xl flex items-center gap-4 border border-white/10"
             >
               <Printer size={20} className="text-blue-400" />
@@ -250,7 +276,7 @@ export default function MainDashboard() {
         </div>
       </main>
 
-      <ExpansionGrid/>
+      <ExpansionGrid />
 
       <FeatureSlider />
 
